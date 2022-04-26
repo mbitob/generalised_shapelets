@@ -15,3 +15,6 @@ docs/_templates
 experiments/results/*
 
 /env
+
+py37-venv/
+

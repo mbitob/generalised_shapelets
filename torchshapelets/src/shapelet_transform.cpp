@@ -278,6 +278,7 @@ namespace torchshapelets {
                        torch::Tensor max_length, const int64_t num_samples,
                        const std::function<torch::Tensor(torch::Tensor, torch::Tensor, torch::Tensor, torch::Tensor)>& discrepancy_fn,
                        torch::Tensor discrepancy_arg) {
+
         check_inputs(times, path, lengths, max_length);
         if (!shapelets.is_floating_point()) {
             throw std::invalid_argument("shapelets must be a floating point tensor.");
@@ -306,10 +307,12 @@ namespace torchshapelets {
         const auto num_shapelet_samples = shapelets.size(1);
         std::vector<torch::Tensor> discrepancies (num_shapelets);
         std::vector<torch::Tensor> indices (num_shapelets);
-
+        
+    
         #pragma omp parallel for default(none) \
-                                 shared(times, path, lengths, shapelets, discrepancies, discrepancy_arg, discrepancy_fn,\
+                                 shared(times, path, lengths, shapelets,num_shapelets, num_shapelet_samples, num_samples, discrepancies, discrepancy_arg, discrepancy_fn,\
                                         indices)
+        
         for (int64_t shapelet_index = 0; shapelet_index < num_shapelets; ++shapelet_index) {
             auto length = lengths[shapelet_index];
             auto shapelet = shapelets[shapelet_index];
